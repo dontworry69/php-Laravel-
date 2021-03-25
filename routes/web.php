@@ -16,3 +16,48 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return "Все работает";
 });
+
+Route::get('/api/todos', function () {
+    return \App\Models\ToDo::all();
+});
+
+Route::get('/api/todos/completed', function () {
+    $todos = \App\Models\ToDo::all();
+    foreach ($todos as $todo) {
+        if ($todo->is_done == 1) {
+            $result[] = $todo;
+        }
+    }
+
+    return $result;
+});
+
+Route::get('/api/todos/incompleted', function () {
+    $todos = \App\Models\ToDo::all();
+    foreach ($todos as $todo) {
+        if ($todo->is_done == 0) {
+            $result[] = $todo;
+        }
+    }
+
+    return $result;
+});
+
+Route::get('/api/todos/add-meow/{id}', function ($id) {
+    $todo = \App\Models\ToDo::find($id);
+    $todo->title .= ' said meow';
+    $todo->save();
+
+    return $todo;
+});
+
+Route::get('/api/todos/{id}', function ($id) {
+    $todos = \App\Models\ToDo::all();
+    foreach ($todos as $todo) {
+        if ($todo->id == $id) {
+            $result = $todo;
+        }
+    }
+
+    return $result;
+});
